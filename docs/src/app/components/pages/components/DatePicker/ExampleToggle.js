@@ -1,7 +1,8 @@
 import React from 'react';
 import DatePicker from 'material-ui/DatePicker';
-import TextField from 'material-ui/TextField';
 import Toggle from 'material-ui/Toggle';
+
+const DateTimeFormat = global.Intl.DateTimeFormat;
 
 const optionsStyle = {
   maxWidth: 255,
@@ -28,15 +29,15 @@ export default class DatePickerExampleToggle extends React.Component {
     };
   }
 
-  handleChangeMinDate = (event) => {
+  handleChangeMinDate = (x, date) => {
     this.setState({
-      minDate: new Date(event.target.value),
+      minDate: date,
     });
   };
 
-  handleChangeMaxDate = (event) => {
+  handleChangeMaxDate = (x, date) => {
     this.setState({
-      maxDate: new Date(event.target.value),
+      maxDate: date,
     });
   };
 
@@ -50,35 +51,55 @@ export default class DatePickerExampleToggle extends React.Component {
     return (
       <div>
         <DatePicker
-          hintText="Ranged Date Picker"
+          formatDate={new DateTimeFormat('en-US', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            weekday: 'short',
+          }).format}
+          floatingLabelText="Ranged Date Picker"
           autoOk={this.state.autoOk}
           minDate={this.state.minDate}
           maxDate={this.state.maxDate}
           disableYearSelection={this.state.disableYearSelection}
         />
         <div style={optionsStyle}>
-          <TextField
-            floatingLabelText="Min Date"
-            value={this.state.minDate.toDateString()}
+          <DatePicker
+            formatDate={new DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              weekday: 'short',
+            }).format}
             onChange={this.handleChangeMinDate}
+            autoOk={this.state.autoOk}
+            floatingLabelText="Min Date"
+            defaultDate={this.state.minDate}
           />
-          <TextField
-            floatingLabelText="Max Date"
-            value={this.state.maxDate.toDateString()}
+          <DatePicker
+            formatDate={new DateTimeFormat('en-US', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+              weekday: 'short',
+            }).format}
             onChange={this.handleChangeMaxDate}
+            autoOk={this.state.autoOk}
+            floatingLabelText="Max Date"
+            defaultDate={this.state.maxDate}
           />
           <Toggle
             name="autoOk"
             value="autoOk"
             label="Auto Accept"
-            toggled={this.state.autoOk}
+            defaultToggled={this.state.autoOk}
             onToggle={this.handleToggle}
           />
           <Toggle
             name="disableYearSelection"
             value="disableYearSelection"
             label="Disable Year Selection"
-            toggled={this.state.disableYearSelection}
+            defaultToggled={this.state.disableYearSelection}
             onToggle={this.handleToggle}
           />
         </div>
