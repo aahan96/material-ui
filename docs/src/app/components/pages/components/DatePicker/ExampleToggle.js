@@ -1,8 +1,17 @@
 import React from 'react';
 import DatePicker from 'material-ui/DatePicker';
 import Toggle from 'material-ui/Toggle';
+import areIntlLocalesSupported from 'intl-locales-supported';
 
-const DateTimeFormat = global.Intl.DateTimeFormat;
+let DateTimeFormat;
+
+if (areIntlLocalesSupported(['en-US'])) {
+  DateTimeFormat = global.Intl.DateTimeFormat;
+} else {
+  const IntlPolyfill = require('intl');
+  DateTimeFormat = IntlPolyfill.DateTimeFormat;
+  require('intl/locale-data/jsonp/en-US');
+}
 
 const optionsStyle = {
   maxWidth: 255,
@@ -29,13 +38,13 @@ export default class DatePickerExampleToggle extends React.Component {
     };
   }
 
-  handleChangeMinDate = (x, date) => {
+  handleChangeMinDate = (event, date) => {
     this.setState({
       minDate: date,
     });
   };
 
-  handleChangeMaxDate = (x, date) => {
+  handleChangeMaxDate = (event, date) => {
     this.setState({
       maxDate: date,
     });
@@ -75,6 +84,7 @@ export default class DatePickerExampleToggle extends React.Component {
             autoOk={this.state.autoOk}
             floatingLabelText="Min Date"
             defaultDate={this.state.minDate}
+            disableYearSelection={this.state.disableYearSelection}
           />
           <DatePicker
             formatDate={new DateTimeFormat('en-US', {
@@ -87,19 +97,20 @@ export default class DatePickerExampleToggle extends React.Component {
             autoOk={this.state.autoOk}
             floatingLabelText="Max Date"
             defaultDate={this.state.maxDate}
+            disableYearSelection={this.state.disableYearSelection}
           />
           <Toggle
             name="autoOk"
             value="autoOk"
             label="Auto Accept"
-            defaultToggled={this.state.autoOk}
+            toggled={this.state.autoOk}
             onToggle={this.handleToggle}
           />
           <Toggle
             name="disableYearSelection"
             value="disableYearSelection"
             label="Disable Year Selection"
-            defaultToggled={this.state.disableYearSelection}
+            toggled={this.state.disableYearSelection}
             onToggle={this.handleToggle}
           />
         </div>
