@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component, PropTypes} from 'react';
 import transitions from '../styles/transitions';
 import {fade} from '../utils/colorManipulator';
 import {createChildFragment} from '../utils/childUtils';
@@ -54,20 +54,22 @@ function getStyles(props, context, state) {
     }
   }
 
+  const buttonHeight = style && style.height || button.height;
+  const borderRadius = 2;
+
   return {
     root: {
       display: 'inline-block',
-      minWidth: fullWidth ? '100%' : button.minWidth,
-      height: button.height,
       transition: transitions.easeOut(),
     },
-    container: {
+    button: {
       position: 'relative',
-      height: '100%',
+      minWidth: fullWidth ? '100%' : button.minWidth,
+      height: buttonHeight,
+      lineHeight: `${buttonHeight}px`,
       width: '100%',
       padding: 0,
-      overflow: 'hidden',
-      borderRadius: 2,
+      borderRadius: borderRadius,
       transition: transitions.easeOut(),
       backgroundColor: backgroundColor,
       // That's the default value for a button but not a link
@@ -75,7 +77,6 @@ function getStyles(props, context, state) {
     },
     label: {
       position: 'relative',
-      verticalAlign: 'middle',
       opacity: 1,
       fontSize: '14px',
       letterSpacing: 0,
@@ -85,16 +86,16 @@ function getStyles(props, context, state) {
       userSelect: 'none',
       paddingLeft: icon && labelPosition !== 'before' ? 8 : baseTheme.spacing.desktopGutterLess,
       paddingRight: icon && labelPosition === 'before' ? 8 : baseTheme.spacing.desktopGutterLess,
-      lineHeight: style && style.height || `${button.height}px`,
       color: labelColor,
     },
     icon: {
-      lineHeight: style && style.height || `${button.height}px`,
       verticalAlign: 'middle',
       marginLeft: label && labelPosition !== 'before' ? 12 : 0,
       marginRight: label && labelPosition === 'before' ? 12 : 0,
     },
     overlay: {
+      height: buttonHeight,
+      borderRadius: borderRadius,
       backgroundColor: (state.keyboardFocused || state.hovered) && !disabled &&
         fade(labelColor, amount),
       transition: transitions.easeOut(),
@@ -107,7 +108,7 @@ function getStyles(props, context, state) {
   };
 }
 
-class RaisedButton extends React.Component {
+class RaisedButton extends Component {
   static muiName = 'RaisedButton';
 
   static propTypes = {
@@ -116,147 +117,124 @@ class RaisedButton extends React.Component {
      * but not the default disabled background color
      * (use `disabledBackgroundColor` for this).
      */
-    backgroundColor: React.PropTypes.string,
-
+    backgroundColor: PropTypes.string,
     /**
      * The content of the button.
      * If a label is provided via the `label` prop, the text within the label
      * will be displayed in addition to the content provided here.
      */
-    children: React.PropTypes.node,
-
+    children: PropTypes.node,
     /**
      * The CSS class name of the root element.
      */
-    className: React.PropTypes.string,
-
+    className: PropTypes.string,
     /**
      * If true, the button will be disabled.
      */
-    disabled: React.PropTypes.bool,
-
+    disabled: PropTypes.bool,
     /**
      * Override the default background color for the button
      * when it is disabled.
      */
-    disabledBackgroundColor: React.PropTypes.string,
-
+    disabledBackgroundColor: PropTypes.string,
     /**
      * The color of the button's label when the button is disabled.
      */
-    disabledLabelColor: React.PropTypes.string,
-
+    disabledLabelColor: PropTypes.string,
     /**
      * If true, the button will take up the full width of its container.
      */
-    fullWidth: React.PropTypes.bool,
-
+    fullWidth: PropTypes.bool,
     /**
      * If `linkButton` is true, the URL to link to when the button
      * is clicked.
      */
-    href: React.PropTypes.string,
-
+    href: PropTypes.string,
     /**
      * An icon to be displayed within the button.
      */
-    icon: React.PropTypes.node,
-
+    icon: PropTypes.node,
     /**
      * The label to be displayed within the button.
      * If content is provided via the `children` prop, that content will be
      * displayed in addition to the label provided here.
      */
     label: validateLabel,
-
     /**
      * The color of the button's label.
      */
-    labelColor: React.PropTypes.string,
-
+    labelColor: PropTypes.string,
     /**
      * The position of the button's label relative to the button's `children`.
      */
-    labelPosition: React.PropTypes.oneOf([
+    labelPosition: PropTypes.oneOf([
       'before',
       'after',
     ]),
-
     /**
      * Override the inline-styles of the button's label element.
      */
-    labelStyle: React.PropTypes.object,
-
+    labelStyle: PropTypes.object,
     /**
      * If true, enable the use of the `href` property to provide
      * a URL to link to.
      */
-    linkButton: React.PropTypes.bool,
-
+    linkButton: PropTypes.bool,
     /**
      * Callback function fired when a mouse button is pressed down on
      * the element.
      *
      * @param {object} event `mousedown` event targeting the element.
      */
-    onMouseDown: React.PropTypes.func,
-
+    onMouseDown: PropTypes.func,
     /**
      * Callback function fired when the mouse enters the element.
      *
      * @param {object} event `mouseenter` event targeting the element.
      */
-    onMouseEnter: React.PropTypes.func,
-
+    onMouseEnter: PropTypes.func,
     /**
      * Callback function fired when the mouse leaves the element.
      *
      * @param {object} event `mouseleave` event targeting the element.
      */
-    onMouseLeave: React.PropTypes.func,
-
+    onMouseLeave: PropTypes.func,
     /**
      * Callback function fired when a mouse button is released on the element.
      *
      * @param {object} event `mouseup` event targeting the element.
      */
-    onMouseUp: React.PropTypes.func,
-
+    onMouseUp: PropTypes.func,
     /**
      * Callback function fired when a touch point is removed from the element.
      *
      * @param {object} event `touchend` event targeting the element.
      */
-    onTouchEnd: React.PropTypes.func,
-
+    onTouchEnd: PropTypes.func,
     /**
      * Callback function fired when the element is touched.
      *
      * @param {object} event `touchstart` event targeting the element.
      */
-    onTouchStart: React.PropTypes.func,
-
+    onTouchStart: PropTypes.func,
     /**
      * If true, the button will use the theme's primary color.
      */
-    primary: React.PropTypes.bool,
-
+    primary: PropTypes.bool,
     /**
      * Override the inline style of the ripple element.
      */
-    rippleStyle: React.PropTypes.object,
-
+    rippleStyle: PropTypes.object,
     /**
      * If true, the button will use the theme's secondary color.
      * If both `secondary` and `primary` are true, the button will use
      * the theme's primary color.
      */
-    secondary: React.PropTypes.bool,
-
+    secondary: PropTypes.bool,
     /**
      * Override the inline-styles of the root element.
      */
-    style: React.PropTypes.object,
+    style: PropTypes.object,
   };
 
   static defaultProps = {
@@ -268,11 +246,12 @@ class RaisedButton extends React.Component {
   };
 
   static contextTypes = {
-    muiTheme: React.PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired,
   };
 
   state = {
     hovered: false,
+    keyboardFocused: false,
     touched: false,
     initialZDepth: 0,
     zDepth: 0,
@@ -297,48 +276,72 @@ class RaisedButton extends React.Component {
   handleMouseDown = (event) => {
     // only listen to left clicks
     if (event.button === 0) {
-      this.setState({zDepth: this.state.initialZDepth + 1});
+      this.setState({
+        zDepth: this.state.initialZDepth + 1,
+      });
     }
-    if (this.props.onMouseDown) this.props.onMouseDown(event);
+    if (this.props.onMouseDown) {
+      this.props.onMouseDown(event);
+    }
   };
 
   handleMouseUp = (event) => {
-    this.setState({zDepth: this.state.initialZDepth});
-    if (this.props.onMouseUp) this.props.onMouseUp(event);
+    this.setState({
+      zDepth: this.state.initialZDepth,
+    });
+    if (this.props.onMouseUp) {
+      this.props.onMouseUp(event);
+    }
   };
 
   handleMouseLeave = (event) => {
-    if (!this.refs.container.isKeyboardFocused()) this.setState({zDepth: this.state.initialZDepth, hovered: false});
-    if (this.props.onMouseLeave) this.props.onMouseLeave(event);
+    if (!this.state.keyboardFocused) {
+      this.setState({
+        zDepth: this.state.initialZDepth,
+        hovered: false,
+      });
+    }
+    if (this.props.onMouseLeave) {
+      this.props.onMouseLeave(event);
+    }
   };
 
   handleMouseEnter = (event) => {
-    if (!this.refs.container.isKeyboardFocused() && !this.state.touch) {
+    if (!this.state.keyboardFocused && !this.state.touched) {
       this.setState({hovered: true});
     }
-    if (this.props.onMouseEnter) this.props.onMouseEnter(event);
+    if (this.props.onMouseEnter) {
+      this.props.onMouseEnter(event);
+    }
   };
 
   handleTouchStart = (event) => {
     this.setState({
-      touch: true,
+      touched: true,
       zDepth: this.state.initialZDepth + 1,
     });
-    if (this.props.onTouchStart) this.props.onTouchStart(event);
+
+    if (this.props.onTouchStart) {
+      this.props.onTouchStart(event);
+    }
   };
 
   handleTouchEnd = (event) => {
-    this.setState({zDepth: this.state.initialZDepth});
-    if (this.props.onTouchEnd) this.props.onTouchEnd(event);
+    this.setState({
+      zDepth: this.state.initialZDepth,
+    });
+
+    if (this.props.onTouchEnd) {
+      this.props.onTouchEnd(event);
+    }
   };
 
   handleKeyboardFocus = (event, keyboardFocused) => {
-    const zDepth = keyboardFocused && !this.props.disabled ?
-      this.state.initialZDepth + 1 : this.state.initialZDepth;
+    const zDepth = (keyboardFocused && !this.props.disabled) ? this.state.initialZDepth + 1 : this.state.initialZDepth;
 
     this.setState({
       zDepth: zDepth,
-      keyboardFocused,
+      keyboardFocused: keyboardFocused,
     });
   };
 
@@ -407,7 +410,7 @@ class RaisedButton extends React.Component {
           {...buttonEventHandlers}
           ref="container"
           disabled={disabled}
-          style={styles.container}
+          style={styles.button}
           focusRippleColor={mergedRippleStyles.color}
           touchRippleColor={mergedRippleStyles.color}
           focusRippleOpacity={mergedRippleStyles.opacity}
